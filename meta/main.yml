@@ -1,0 +1,5 @@
+---
+dependencies:
+  - name: community.docker
+    src: community.docker
+    version: 2.5.0

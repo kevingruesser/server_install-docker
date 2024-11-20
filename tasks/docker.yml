@@ -1,0 +1,34 @@
+---
+- name: Install Docker and related packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop: "{{ docker_packages }}"
+
+- name: Add Docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Add user to Docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Enable and start Docker services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - docker.service
+    - containerd.service
+
+- name: Create Docker network "{{ docker_network.name }}"
+  community.docker.docker_network:
+    name: "{{ docker_network.name }}"
+    ipam_config:
+      - subnet: "{{ docker_network.subnet }}"
+        gateway: "{{ docker_network.gateway }}"

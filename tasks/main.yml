@@ -1,0 +1,7 @@
+---
+# Main tasks file for the role
+- name: Setup system prerequisites
+  include_tasks: setup.yml
+
+- name: Install and configure Docker
+  include_tasks: docker.yml
